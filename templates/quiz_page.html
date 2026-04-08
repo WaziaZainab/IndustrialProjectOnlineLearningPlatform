@@ -1,0 +1,46 @@
+<h2 class="title">🎯 Quiz Zone</h2>
+
+<div class="quiz-container">
+
+    <!-- Create Quiz -->
+    <div class="quiz-card">
+        <h3>Create a New Quiz</h3>
+        <a href="/create_quiz" class="btn create">+ Create Quiz</a>
+    </div>
+
+    <!-- Attempted Quiz -->
+    <div class="quiz-card">
+        <h3>Your Attempts</h3>
+
+        {% if attempted %}
+            {% for a in attempted %}
+                <p>
+                    Quiz ID: {{ a.quiz_id }} — Score:
+                    <b>{{ a.score }}</b>
+                    <a href="/leaderboard/{{ a.quiz_id }}">Leaderboard</a>
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>No quizzes attempted yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- All Quizzes -->
+    <div class="quiz-card">
+        <h3>Available Quizzes</h3>
+
+        {% for q in quizzes %}
+            <p>
+                {{ q.title }}
+                <a href="/attempt_quiz/{{ q.id }}" class="btn small">Take Quiz</a>
+            </p>
+        {% endfor %}
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="quiz-card">
+        <h3>Leaderboard</h3>
+        <a href="/leaderboard/1" class="btn">View Leaderboard</a>
+    </div>
+
+</div>

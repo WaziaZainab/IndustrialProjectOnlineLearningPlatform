@@ -1,0 +1,78 @@
+{% for video in videos %}
+    {% set user_liked = liked_map.get(video.id, False) %}
+
+    <div class="card mb-3 shadow">
+        <div class="card-body">
+            <!-- Title linked to detail page -->
+            <a href="{{ url_for('video_detail', vid=video.id) }}" class="text-decoration-none">
+                <h5 class="card-title">{{ video.title }}</h5>
+            </a>
+            <p class="card-text"><strong>Category:</strong> {{ video.category }}</p>
+            <p class="card-text"><strong>Channel:</strong> {{ video.channel.name }}</p>
+
+            <!-- Small Preview (not full embed, just a link) -->
+            <div class="mb-2">
+                <a href="{{ url_for('video_detail', vid=video.id) }}">
+                    ▶ Watch Video
+                </a>
+            </div>
+
+            <!-- Like Button -->
+            <button class="like-btn btn btn-sm btn-outline-primary"
+                    data-vid="{{ video.id }}">
+                {{ 'Unlike' if user_liked else 'Like' }}
+            </button>
+            <span class="like-count" id="like-count-{{ video.id }}">
+                {{ video.likes|length }} {{ 'like' if video.likes|length == 1 else 'likes' }}
+            </span>
+
+            <!-- Subscribe Button -->
+            {% if current_user.is_authenticated %}
+                <form action="{{ url_for('subscribe', cid=video.channel.id) }}" method="post" class="d-inline">
+                    {% set subscribed = current_user in video.channel.subscribers %}
+                    <button type="submit" class="btn btn-sm btn-outline-success">
+                        {{ 'Unsubscribe' if subscribed else 'Subscribe' }}
+                    </button>
+                </form>
+                <span>{{ video.channel.subscribers|length }} subscribers</span>
+            {% endif %}
+
+            <!-- Comment Count (redirects to detail page) -->
+            <div class="mt-2">
+                <a href="{{ url_for('video_detail', vid=video.id) }}#comments">
+                    {{ video.comments|length }} comments
+                </a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const likeButtons = document.querySelectorAll(".like-btn");
+
+    likeButtons.forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const vid = btn.dataset.vid;
+            try {
+                const response = await fetch(`/like/${vid}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
+                btn.textContent = data.liked ? "Unlike" : "Like";
+                document.getElementById(`like-count-${vid}`).textContent = 
+                    data.count + (data.count === 1 ? " like" : " likes");
+            } catch (err) {
+                console.error("Error liking video:", err);
+            }
+        });
+    });
+});
+</script>
+
+
+
+
+

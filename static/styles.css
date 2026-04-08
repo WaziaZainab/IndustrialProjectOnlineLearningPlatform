@@ -1,0 +1,398 @@
+.video-card img{
+    
+    aspect-ratio:16/9;
+     object-fit:cover;
+}
+/* Leaderboard cards */
+.leaderboard-card {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leaderboard-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+}
+
+.score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  animation: scoreBounce 1s infinite alternate;
+}
+
+@keyframes scoreBounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+/* Quiz card hover */
+.quiz-card {
+  border-left: 5px solid #2575fc;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quiz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Button gradient & hover */
+.btn-gradient {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.glass-modal{
+background: rgba(0,0,0,0.8);
+backdrop-filter: blur(20px);
+border-radius:15px;
+border:none;
+color:white;
+animation: zoomIn 0.4s ease;
+}
+
+.form-control{
+background: rgba(255,255,255,0.1);
+border:none;
+color:white;
+}
+
+.form-control:focus{
+background: rgba(255,255,255,0.2);
+box-shadow:0 0 10px #6366f1;
+color:white;
+}
+
+.btn-primary{
+background: linear-gradient(45deg,#2563eb,#7c3aed);
+border:none;
+}
+
+@keyframes zoomIn{
+from{
+transform:scale(0.7);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+/* background blur when modal open */
+.modal-backdrop.show {
+    backdrop-filter: blur(8px);
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* glass login/register box */
+.glass-modal{
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(15px);
+    border-radius:15px;
+    border:none;
+    color:white;
+    animation: zoomIn 0.4s ease;
+}
+
+@keyframes zoomIn{
+from{
+transform:scale(0.7);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+
+/* upload section background */
+.upload-wrapper{
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:80vh;
+animation:fadeIn 0.8s ease;
+}
+
+/* glass card */
+.upload-glass{
+width:500px;
+padding:40px;
+border-radius:20px;
+background:rgba(20,20,20,0.8);
+backdrop-filter:blur(20px);
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+color:white;
+animation:slideUp 0.8s ease;
+}
+
+/* heading */
+.upload-heading{
+text-align:center;
+margin-bottom:25px;
+font-weight:600;
+}
+
+/* inputs */
+.upload-input{
+background:#111 !important;
+border:1px solid #333 !important;
+color:white !important;
+border-radius:10px !important;
+transition:0.3s;
+}
+
+/* input focus glow */
+.upload-input:focus{
+border-color:#0d6efd !important;
+box-shadow:0 0 12px #0d6efd !important;
+}
+
+/* button */
+.upload-btn{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:linear-gradient(45deg,#007bff,#00c6ff);
+color:white;
+font-weight:600;
+transition:0.3s;
+}
+
+/* button hover animation */
+.upload-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px #00c6ff;
+}
+
+/* animations */
+
+@keyframes slideUp{
+0%{
+transform:translateY(60px);
+opacity:0;
+}
+100%{
+transform:translateY(0);
+opacity:1;
+}
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+
+/* dark theme background */
+body{
+background:linear-gradient(135deg,#0f0f0f,#1a1a1a,#000000);
+color:white;
+min-height:100vh;
+}
+
+/* smooth page animation */
+body{
+animation:fadePage 0.8s ease;
+}
+
+@keyframes fadePage{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Leaderboard Table Dark Style */
+
+.table{
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+border-radius:15px;
+overflow:hidden;
+color:white;
+}
+
+.table thead{
+background: linear-gradient(90deg,#00c6ff,#0072ff);
+color:white;
+font-size:18px;
+}
+
+.table th, .table td{
+padding:15px;
+text-align:center;
+border:none;
+}
+
+.table tbody tr{
+background: rgba(255,255,255,0.05);
+transition:0.3s;
+}
+
+.table tbody tr:hover{
+background: rgba(0,198,255,0.2);
+transform: scale(1.02);
+}
+
+/* Rank colors */
+
+.table tbody tr:nth-child(1){
+background: rgba(255,215,0,0.15);
+font-weight:bold;
+}
+
+.table tbody tr:nth-child(2){
+background: rgba(192,192,192,0.15);
+}
+
+.table tbody tr:nth-child(3){
+background: rgba(205,127,50,0.15);
+}
+
+.video-card{
+background:#111 !important;
+border:none;
+border-radius:15px;
+overflow:hidden;
+transition:0.3s;
+box-shadow:0 8px 20px rgba(0,0,0,0.5);
+}
+
+/* hover animation */
+.video-card:hover{
+transform:translateY(-8px) scale(1.03);
+box-shadow:0 15px 35px rgba(0,198,255,0.4);
+}
+
+/* card text */
+.card-body{
+color:white;
+}
+
+.offcanvas{
+background:#0f0f0f;
+color:white;
+}
+
+.offcanvas input,
+.offcanvas textarea,
+.offcanvas select{
+background:#111;
+border:1px solid #333;
+color:white;
+}
+
+.btn{
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 12px rgba(0,123,255,0.6);
+}
+
+h1,h3,h5{
+background:linear-gradient(90deg,#00c6ff,#0072ff);
+background-clip:text;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+color:transparent;
+font-weight:700;
+}
+
+h1,h3,h5{
+animation:glowText 2s infinite alternate;
+}
+
+@keyframes glowText{
+from{ text-shadow:0 0 5px #00c6ff; }
+to{ text-shadow:0 0 20px #0072ff; }
+}
+
+.leaderboard-card{
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(15px);
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+
+/* Features Cards */
+
+.feature-card{
+
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+border-radius:20px;
+padding:30px;
+color:white;
+text-align:center;
+
+transition:0.4s;
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
+
+animation:fadeUp 1s ease;
+
+}
+
+.feature-card:hover{
+
+transform:translateY(-10px) scale(1.05);
+box-shadow:0 15px 35px rgba(0,198,255,0.5);
+
+}
+
+.glow-title{
+
+background: linear-gradient(90deg,#00c6ff,#0072ff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+font-weight:700;
+
+}
+
+/* animation */
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(30px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}

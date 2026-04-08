@@ -1,0 +1,30 @@
+<h2>All Feedback</h2>
+
+<table border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>Name</th><th>Email</th><th>Rating</th><th>Message</th><th>Date</th>
+    </tr>
+  </thead>
+  <tbody id="feedbackTable"></tbody>
+</table>
+
+<script>
+fetch("/feedback-list")
+  .then(res => res.json())
+  .then(data => {
+      let rows = "";
+      data.forEach(f => {
+          rows += `
+            <tr>
+              <td>${f.name}</td>
+              <td>${f.email}</td>
+              <td>${f.rating}</td>
+              <td>${f.message}</td>
+              <td>${f.date}</td>
+            </tr>
+          `;
+      });
+      document.getElementById("feedbackTable").innerHTML = rows;
+  });
+</script>

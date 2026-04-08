@@ -1,0 +1,54 @@
+
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Existing home page content -->
+<h1>Welcome to Edutube</h1>
+<!-- Video list, leaderboard, etc -->
+
+<!-- === Feedback Form === -->
+<h2>Submit Your Feedback</h2>
+<form id="feedbackForm">
+  <input type="text" id="name" placeholder="Your Name" required><br><br>
+  <input type="email" id="email" placeholder="Your Email" required><br><br>
+  <label>Rating</label><br>
+  <select id="rating" required>
+      <option value="">Select Rating</option>
+      <option value="1">⭐ 1</option>
+      <option value="2">⭐ 2</option>
+      <option value="3">⭐ 3</option>
+      <option value="4">⭐ 4</option>
+      <option value="5">⭐ 5</option>
+  </select><br><br>
+  <textarea id="message" placeholder="Write your feedback..." required></textarea><br><br>
+  <button type="submit">Submit</button>
+</form>
+<p id="msg"></p>
+
+<script>
+document.getElementById("feedbackForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        rating: document.getElementById("rating").value,
+        message: document.getElementById("message").value
+    };
+
+    fetch("/submit-feedback", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("msg").innerText = data.message;
+        document.getElementById("feedbackForm").reset();
+    });
+});
+</script>
+
+{% endblock %}

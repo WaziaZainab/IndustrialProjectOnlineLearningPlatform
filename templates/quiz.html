@@ -1,0 +1,45 @@
+<div class="container py-5">
+  <h2 class="text-center mb-4">📝 {{ quiz.title if quiz else 'Sample Quiz' }}</h2>
+  <form method="POST">
+    {% for q in questions or quiz %}
+    <div class="card mb-3 quiz-card">
+      <div class="card-body">
+        <h5 class="card-title">{{ loop.index }}. {{ q.question_text or q['question'] }}</h5>
+        <div class="options mt-2">
+          {% for opt in q.options or q['options'] %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="{{ q.id or loop.index0 }}" value="{{ loop.index0 }}" required>
+            <label class="form-check-label">{{ opt }}</label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="text-center mt-3">
+      <button type="submit" class="btn btn-gradient btn-lg">Submit Quiz</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.quiz-card');
+  window.addEventListener('scroll', () => {
+    const triggerBottom = window.innerHeight / 5 * 4;
+    cards.forEach(card => {
+      const cardTop = card.getBoundingClientRect().top;
+      if(cardTop < triggerBottom){
+        card.style.opacity = 1;
+        card.style.transform = 'translateY(0)';
+      }
+    });
+  });
+</script>
+
+<style>
+  .quiz-card {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.6s ease-out;
+  }
+</style>

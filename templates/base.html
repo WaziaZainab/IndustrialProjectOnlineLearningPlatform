@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EduTube</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">EduTube</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+          <form class="d-flex ms-auto" role="search" method="get" action="{{ url_for('index') }}">
+            <input class="form-control me-2" type="search" placeholder="Search" name="q" value="{{ q|default('') }}">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+          <ul class="navbar-nav ms-3">
+  {% if current_user.is_authenticated %}
+    <li class="nav-item">
+      <span class="navbar-text me-3">
+        Welcome, {{ current_user.name }}
+      </span>
+    </li>
+    <li class="nav-item">
+<a class="nav-link" href="/features">Features</a>
+</li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('upload') }}">Upload</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+  {% else %}
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Sign Up</a>
+  {% endif %}
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <div class="container py-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mb-3">
+            {% for cat, msg in messages %}
+              <div class="alert alert-{{ 'warning' if cat=='message' else cat }}">{{ msg }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+
+    
+        <a href="{{ url_for('create_quiz') }}" class="btn btn-success">
+    Create Quiz
+</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      async function postJSON(url, data) {
+        const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(data)});
+        return await res.json();
+      }
+    </script>
+        
+
+
+    <!-- ✅ Chatbot UI Start -->
+    <div id="chatbot-toggle" 
+         style="position:fixed; bottom:20px; right:20px; background:#007bff; color:white;
+                padding:15px; border-radius:50%; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
+        💬
+    </div>
+
+    <div id="chatbot-box" 
+         style="display:none; position:fixed; bottom:80px; right:20px; width:300px; height:400px; 
+                background:white; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.3); 
+                overflow:hidden; flex-direction:column;">
+
+        <div style="background:#007bff; color:white; padding:10px; text-align:center;">
+            EduTube Chatbot
+        </div>
+
+        <div id="chatbot-messages" style="flex:1; padding:10px; overflow-y:auto; font-size:14px;">
+            <div><b>Bot:</b> Hi 👋 mai aapki help ke liye hu</div>
+        </div>
+
+        <div style="display:flex; border-top:1px solid #ddd;">
+            <input id="chatbot-input" type="text" placeholder="Type a message..." 
+                   style="flex:1; border:none; padding:10px;">
+            <button id="chatbot-send" style="background:#007bff; color:white; border:none; padding:10px;">➤</button>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content glass-modal">
+
+<div class="modal-body p-4">
+
+<h3 class="text-center text-light mb-4">Welcome Back 👋</h3>
+
+<form method="post" action="{{ url_for('login') }}">
+
+<div class="mb-3">
+<label>Email</label>
+<input class="form-control" type="email" name="email" required>
+</div>
+
+<div class="mb-3">
+<label>Password</label>
+<input class="form-control" type="password" name="password" required>
+</div>
+
+<button class="btn btn-primary w-100">
+Sign In
+</button>
+
+</form>
+
+<p class="text-center small mt-3 text-light">
+No account?
+<a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">
+Register
+</a>
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+<!-- REGISTER MODAL -->
+<div class="modal fade" id="registerModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content glass-modal">
+
+<div class="modal-body p-4">
+
+<h3 class="text-center text-light mb-4">Create Account 🚀</h3>
+
+<form method="post" action="{{ url_for('register') }}">
+
+<div class="mb-3">
+<label>Name</label>
+<input class="form-control" name="name" required>
+</div>
+
+<div class="mb-3">
+<label>Email</label>
+<input class="form-control" type="email" name="email" required>
+</div>
+
+<div class="mb-3">
+<label>Password</label>
+<input class="form-control" type="password" name="password" required>
+</div>
+
+<button class="btn btn-primary w-100">
+Register
+</button>
+
+</form>
+
+<p class="text-center small mt-3 text-light">
+Already have an account?
+<a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">
+Login
+</a>
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+    <script>
+      const toggle = document.getElementById("chatbot-toggle");
+      const box = document.getElementById("chatbot-box");
+      const sendBtn = document.getElementById("chatbot-send");
+      const input = document.getElementById("chatbot-input");
+      const messages = document.getElementById("chatbot-messages");
+
+      toggle.addEventListener("click", () => {
+          box.style.display = (box.style.display === "none") ? "flex" : "none";
+      });
+
+      sendBtn.addEventListener("click", sendMessage);
+      input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") sendMessage();
+      });
+
+      function sendMessage() {
+          let text = input.value.trim();
+          if (!text) return;
+          messages.innerHTML += `<div><b>You:</b> ${text}</div>`;
+          input.value = "";
+
+          fetch("/chatbot", {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify({message: text})
+          })
+          .then(res => res.json())
+          .then(data => {
+              messages.innerHTML += `<div><b>Bot:</b> ${data.reply}</div>`;
+              messages.scrollTop = messages.scrollHeight;
+          });
+      }
+    </script>
+    <!-- ✅ Chatbot UI End -->
+
+
+
+  </body>
+</html>
+
+  

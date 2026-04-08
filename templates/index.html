@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h5>{{ videos|length }} results</h5>
+    <form method="get" class="d-flex gap-2">
+        <input type="hidden" name="q" value="{{ q }}">
+        <select class="form-select" name="category" onchange="this.form.submit()" style="max-width:220px">
+            {% for c in categories %}
+                <option value="{{ c }}" {% if c==current_cat %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<div class="container py-4">
+  <h1 class="mb-4">EduTube Leaderboard</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" class="mb-4">
+    <div class="row g-2">
+      <div class="col">
+        <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+      </div>
+      <div class="col">
+        <input type="number" name="points" class="form-control" placeholder="Points" required>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary">Add / Update Score</button>
+      </div>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Username</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.score }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3" class="text-center">No users yet!</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Feedback Button -->
+<button class="btn btn-warning position-fixed" 
+        style="top: 100px; right: 20px; z-index:1050;" 
+        type="button" data-bs-toggle="offcanvas" data-bs-target="#feedbackSidebar" aria-controls="feedbackSidebar">
+    Give Feedback
+</button>
+
+<!-- Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="feedbackSidebar" aria-labelledby="feedbackSidebarLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="feedbackSidebarLabel">Submit Your Feedback</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    {% if current_user.is_authenticated %}
+    <form id="feedbackForm">
+      <div class="mb-2">
+        <input type="text" id="name" class="form-control" placeholder="Your Name" value="{{ current_user.name }}" required>
+      </div>
+      <div class="mb-2">
+        <input type="email" id="email" class="form-control" placeholder="Your Email" value="{{ current_user.email }}" required>
+      </div>
+      <div class="mb-2">
+        <label>Rating</label>
+        <select id="rating" class="form-select" required>
+          <option value="">Select Rating</option>
+          <option value="1">⭐ 1</option>
+          <option value="2">⭐ 2</option>
+          <option value="3">⭐ 3</option>
+          <option value="4">⭐ 4</option>
+          <option value="5">⭐ 5</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <textarea id="message" class="form-control" placeholder="Write your feedback..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-success w-100">Submit Feedback</button>
+      <p id="msg" class="mt-2 text-success"></p>
+    </form>
+
+    <script>
+    document.getElementById("feedbackForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const data = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            rating: document.getElementById("rating").value,
+            message: document.getElementById("message").value
+        };
+        fetch("/submit-feedback", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("msg").innerText = data.message;
+            document.getElementById("feedbackForm").reset();
+        });
+    });
+    </script>
+    {% else %}
+    <p class="text-center">Please <a href="{{ url_for('login') }}">login</a> to submit feedback.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ✅ End Quiz Button -->
+<div class="row g-4">
+    {% for v in videos %}
+    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm video-card">
+            <a href="{{ url_for('video_detail', vid=v.id) }}" class="text-decoration-none text-dark">
+                <div class="ratio ratio-16x9">
+                    {% if 'youtube.com' in v.url %}
+                        <iframe src="{{ v.url }}" frameborder="0" allowfullscreen></iframe>
+                    {% else %}
+                        <video width="100%" height="100%" controls>
+                            <source src="{{ v.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title mb-1">{{ v.title }}</h6>
+                    <div class="text-muted small">{{ v.channel.name }} • {{ v.views }} views</div>
+                    <div class="mt-2 small">
+                        {% for t in (v.tags or '').split(',')[:3] %}
+                            {% if t.strip() %}
+                                <span class="badge bg-light text-dark me-1">#{{ t.strip() }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>  
+
+<h3 class="mt-5">Available Quizzes</h3>
+<ul class="list-group mb-3">
+    {% for q in quizzes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ q.title }}
+            <a href="{{ url_for('attempt_quiz', quiz_id=q.id) }}" class="btn btn-sm btn-primary">Start</a>
+        </li>
+    {% else %}
+        <li class="list-group-item">No quizzes yet!</li>
+    {% endfor %}
+</ul>
+
+
+
+    
+<!-- ✅ Quiz Button Added Here -->
+<div class="mb-4" id="quiz">
+    <a href="{{ url_for('quiz') }}" class="btn btn-primary">
+        Take Quiz
+    </a>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

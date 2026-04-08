@@ -1,0 +1,18 @@
+<div class="container py-4">
+  <h1 class="mb-4 text-center">🏆 EduTube Leaderboard</h1>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for user in users %}
+      <div class="col">
+        <div class="card leaderboard-card text-center shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title">{{ loop.index }}. {{ user.username }}</h5>
+            <p class="card-text score">{{ user.score }} pts</p>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center mt-3">No users yet!</p>
+    {% endfor %}
+  </div>
+</div>
