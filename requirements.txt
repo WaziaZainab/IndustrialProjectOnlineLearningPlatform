@@ -1,6 +1,10 @@
 ﻿flask
 flask_sqlalchemy
+flask_login
+flask_migrate
 gunicorn
 openai
+google-generativeai
+python-dotenv
 requests
 tqdm
